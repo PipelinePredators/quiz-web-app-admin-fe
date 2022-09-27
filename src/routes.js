@@ -117,13 +117,13 @@ var dashRoutes = [
   //   component: UserPage,
   //   layout: "/admin",
   // },
-  // {
-  //   path: "/extended-tables",
-  //   name: "Table List",
-  //   icon: "files_paper",
-  //   component: TableList,
-  //   layout: "/admin",
-  // },
+  {
+    path: "/extended-tables",
+    name: "Table List",
+    icon: "files_paper",
+    component: TableList,
+    layout: "/admin",
+  },
   // {
   //   path: "/typography",
   //   name: "Typography",
