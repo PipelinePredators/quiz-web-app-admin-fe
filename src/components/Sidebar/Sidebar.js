@@ -1,4 +1,3 @@
-/*eslint-disable*/
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { Nav } from "reactstrap";
@@ -32,7 +31,7 @@ function Sidebar(props) {
     <div className="sidebar" data-color={props.backgroundColor}>
       <div className="logo">
         <a
-          href="https://www.creative-tim.com?ref=nudr-sidebar"
+          href="https://www.pipelinepredators.com"
           className="simple-text logo-mini"
           target="_blank"
         >
@@ -41,11 +40,11 @@ function Sidebar(props) {
           </div>
         </a>
         <a
-          href="https://www.creative-tim.com?ref=nudr-sidebar"
+          href="https://www.pipelinepredators.com"
           className="simple-text logo-normal"
           target="_blank"
         >
-          Creative Tim
+          Pipeline Predators
         </a>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>

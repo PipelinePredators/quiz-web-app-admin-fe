@@ -18,6 +18,7 @@
 import Dashboard from "views/Dashboard.js";
 import Notifications from "views/Notifications.js";
 import Icons from "views/Icons.js";
+import Subject from "views/Subjects.js";
 import Typography from "views/Typography.js";
 import TableList from "views/TableList.js";
 import Maps from "views/Maps.js";
@@ -33,59 +34,59 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
-    path: "/english",
+    path: "/subject/english",
     name: "English",
-    icon: "design_app",
-    component: Dashboard,
+    icon: "education_hat",
+    component: Subject,
     layout: "/admin",
   },
   {
-    path: "/mathematics",
+    path: "/subject/mathematics",
     name: "Mathematics",
-    icon: "design_app",
-    component: Dashboard,
+    icon: "location_world",
+    component: Subject,
     layout: "/admin",
   },
   {
-    path: "/socialstudies",
+    path: "/subject/socialstudies",
     name: "Social Studies",
-    icon: "design_app",
-    component: Dashboard,
+    icon: "business_globe",
+    component: Subject,
     layout: "/admin",
   },
   {
-    path: "/science",
+    path: "/subject/science",
     name: "Integrated Science",
-    icon: "design_app",
-    component: Dashboard,
+    icon: "objects_spaceship",
+    component: Subject,
     layout: "/admin",
   },
   {
-    path: "/physics",
+    path: "/subject/physics",
     name: "Physics",
-    icon: "design_app",
-    component: Dashboard,
+    icon: "objects_planet",
+    component: Subject,
     layout: "/admin",
   },
   {
-    path: "/biology",
+    path: "/subject/biology",
     name: "Biology",
-    icon: "design_app",
-    component: Dashboard,
+    icon: "sport_user-run",
+    component: Subject,
     layout: "/admin",
   },
   {
-    path: "/chemistry",
+    path: "/subject/chemistry",
     name: "Chemistry",
-    icon: "design_app",
-    component: Dashboard,
+    icon: "education_atom",
+    component: Subject,
     layout: "/admin",
   },
   {
-    path: "/emathematics",
+    path: "/subject/emathematics",
     name: "Elective Mathematics",
-    icon: "design_app",
-    component: Dashboard,
+    icon: "ui-1_send",
+    component: Subject,
     layout: "/admin",
   },
   {
