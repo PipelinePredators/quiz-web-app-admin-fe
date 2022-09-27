@@ -13,6 +13,7 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
+import Subjects from "views/Subjects";
 
 var ps;
 
@@ -46,6 +47,7 @@ function Admin(props) {
       <div className="main-panel" ref={mainPanel}>
         <DemoNavbar {...props} />
         <Switch>
+          <Route path="/admin/subject/:subjectName" children={<Subjects />} />
           {routes.map((prop, key) => {
             return (
               <Route
