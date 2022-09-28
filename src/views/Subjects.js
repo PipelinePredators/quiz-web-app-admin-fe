@@ -50,7 +50,6 @@ const Subjects = () => {
         const inputFile = document.getElementById('excelFile');
         const inputFileRef = inputFile?.files[0];
         handleFileAsync(inputFileRef).then(value => {
-            console.log('value', value)
             setQuestions(value);
         })
     }
