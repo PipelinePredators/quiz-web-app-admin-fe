@@ -14,6 +14,9 @@ import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
 import Subjects from "views/Subjects";
+import { getSubjects } from "services/DashboardService";
+import { useDispatch } from "react-redux";
+import { setSubjectsState } from "redux/SubjectSlice";
 
 var ps;
 
@@ -21,11 +24,22 @@ function Admin(props) {
   const location = useLocation();
   const [backgroundColor, setBackgroundColor] = React.useState("blue");
   const mainPanel = React.useRef();
+
+  const dispatch = useDispatch();
+
+
+  React.useEffect(() => {
+    getSubjects().then((value) => {
+      dispatch(setSubjectsState(value.data));
+    })
+  })
+
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(mainPanel.current);
       document.body.classList.toggle("perfect-scrollbar-on");
     }
+
     return function cleanup() {
       if (navigator.platform.indexOf("Win") > -1) {
         ps.destroy();
@@ -33,11 +47,15 @@ function Admin(props) {
       }
     };
   });
+
+
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     mainPanel.current.scrollTop = 0;
   }, [location]);
+
+
   const handleColorClick = (color) => {
     setBackgroundColor(color);
   };

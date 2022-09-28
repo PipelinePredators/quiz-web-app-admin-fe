@@ -4,6 +4,8 @@
   "main": "dist/index.js",
   "private": true,
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.5",
+    "axios": "^0.27.2",
     "bootstrap": "4.6.0",
     "chart.js": "3.2.1",
     "gulp": "4.0.2",
@@ -14,10 +16,13 @@
     "react-chartjs-2": "3.0.3",
     "react-dom": "17.0.2",
     "react-notification-alert": "0.0.13",
+    "react-redux": "^8.0.4",
     "react-router": "5.2.0",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
-    "reactstrap": "8.9.0"
+    "reactstrap": "8.9.0",
+    "redux-persist": "^6.0.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.18.12/xlsx-0.18.12.tgz"
   },
   "scripts": {
     "start": "react-scripts start",
