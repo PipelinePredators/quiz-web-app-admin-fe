@@ -1,20 +1,4 @@
-/*!
 
-=========================================================
-* Now UI Dashboard React - v1.5.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/now-ui-dashboard-react
-* Copyright 2021 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://github.com/creativetimofficial/now-ui-dashboard-react/blob/main/LICENSE.md)
-
-* Coded by Creative Tim
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
-*/
 import React from "react";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
@@ -29,6 +13,10 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
+import Subjects from "views/Subjects";
+import { getSubjects } from "services/DashboardService";
+import { useDispatch } from "react-redux";
+import { setSubjectsState } from "redux/SubjectSlice";
 
 var ps;
 
@@ -36,11 +24,22 @@ function Admin(props) {
   const location = useLocation();
   const [backgroundColor, setBackgroundColor] = React.useState("blue");
   const mainPanel = React.useRef();
+
+  const dispatch = useDispatch();
+
+
+  React.useEffect(() => {
+    getSubjects().then((value) => {
+      dispatch(setSubjectsState(value.data));
+    })
+  })
+
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(mainPanel.current);
       document.body.classList.toggle("perfect-scrollbar-on");
     }
+
     return function cleanup() {
       if (navigator.platform.indexOf("Win") > -1) {
         ps.destroy();
@@ -48,11 +47,15 @@ function Admin(props) {
       }
     };
   });
+
+
   React.useEffect(() => {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
     mainPanel.current.scrollTop = 0;
   }, [location]);
+
+
   const handleColorClick = (color) => {
     setBackgroundColor(color);
   };
@@ -62,6 +65,7 @@ function Admin(props) {
       <div className="main-panel" ref={mainPanel}>
         <DemoNavbar {...props} />
         <Switch>
+          <Route path="/admin/subject/:subjectName" children={<Subjects />} />
           {routes.map((prop, key) => {
             return (
               <Route
@@ -75,10 +79,6 @@ function Admin(props) {
         </Switch>
         <Footer fluid />
       </div>
-      <FixedPlugin
-        bgColor={backgroundColor}
-        handleColorClick={handleColorClick}
-      />
     </div>
   );
 }
