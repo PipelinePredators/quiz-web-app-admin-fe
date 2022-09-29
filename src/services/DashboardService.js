@@ -1,8 +1,8 @@
 import axios from "axios"
 
 
-// const host = 'https://backend.pipelinepredators.com'
-const host = 'http://localhost:8080';
+const host = 'https://backend.pipelinepredators.com'
+// const host = 'http://localhost:8080';
 /**
  * It returns a promise that resolves to the response of an HTTP request to the URL
  * `/quiz/api/fetch_subjects`
