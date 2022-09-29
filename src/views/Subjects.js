@@ -24,6 +24,7 @@ import { setTakeQuizState } from 'redux/TakeQuizSlice';
 import { uploadQuizzes } from 'services/DashboardService';
 import { deleteAllQuizzes } from 'services/DashboardService';
 import { removeTakeQuizState } from 'redux/TakeQuizSlice';
+import Swal from 'sweetalert2';
 
 
 const Subjects = () => {
@@ -72,6 +73,87 @@ const Subjects = () => {
         const ws = wb.Sheets[wb.SheetNames[0]];
         const data = utils.sheet_to_json(ws);
         return data;
+    }
+
+    const notifyQuestionUpload = (message) => {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+        Toast.fire({
+            icon: 'info',
+            title: message
+        })
+    }
+
+    const deleteNofication = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteAllQuizzes({ subjectIdNo: subjectIDNO }).then((value) => {
+                    dispatch(removeTakeQuizState());
+                    Swal.fire(
+                        'Deleted!',
+                        'Your file has been deleted.',
+                        'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    })
+                })
+            }
+        })
+    }
+
+    const onUploadNotification = () => {
+        Swal.fire({
+            title: 'Are you sure you want to upload questions?',
+            icon: 'info',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                uploadQuizzes({ subjectIdNo: subjectIDNO, questionArray: questions }).then((value) => {
+                    Swal.fire(
+                        'Success!',
+                        'Your file has been uploaded successfully.',
+                        'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    })
+                }).catch((err) => {
+                    Swal.fire(
+                        'Error!',
+                        'Upload failed.',
+                        'failed'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    })
+                })
+            }
+        })
     }
 
 
@@ -127,8 +209,11 @@ const Subjects = () => {
         getTakeQuizzes({ subjectId: subjectIdNo, questionNumber: 1000 }).then(
             (value) => {
                 setSubjectIDNo(subjectIdNo);
-                parseQuestion(value);
+                parseQuestion(value.data);
                 setUploadButtonHidden(true);
+                if (value.data.length !== 0) {
+                    notifyQuestionUpload(value.message);
+                }
             })
     }
 
@@ -184,20 +269,14 @@ const Subjects = () => {
 
     const onUploadQuestion = (event) => {
         event.preventDefault();
+        onUploadNotification();
         console.log('Questions', questions)
-        uploadQuizzes({ subjectIdNo: subjectIDNO, questionArray: questions }).then((value) => {
-            location.reload();
-        }).catch((err) => {
-            console.log('Err', err);
-        })
+
     }
 
     const onDeleteAllQuestions = (event) => {
         event.preventDefault();
-        deleteAllQuizzes({ subjectIdNo: subjectIDNO }).then((value) => {
-            dispatch(removeTakeQuizState());
-            location.reload();
-        })
+        deleteNofication();
     }
 
     return (
