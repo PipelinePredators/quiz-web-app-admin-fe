@@ -21,6 +21,9 @@ import { useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTakeQuizzes } from 'services/DashboardService';
 import { setTakeQuizState } from 'redux/TakeQuizSlice';
+import { uploadQuizzes } from 'services/DashboardService';
+import { deleteAllQuizzes } from 'services/DashboardService';
+import { removeTakeQuizState } from 'redux/TakeQuizSlice';
 
 
 const Subjects = () => {
@@ -30,9 +33,10 @@ const Subjects = () => {
 
     const [subject, setSubject] = useState('')
     const [questions, setQuestions] = useState([]);
+    const [subjectIDNO, setSubjectIDNo] = useState(0);
+    const [uploadButtonHidden, setUploadButtonHidden] = useState(false);
 
     const subjects = useSelector(state => state.subject.value);
-    const storedQuestions = useSelector(state => state.takeQuiz.quiz);
 
     const dispatch = useDispatch()
 
@@ -51,6 +55,7 @@ const Subjects = () => {
         const inputFileRef = inputFile?.files[0];
         handleFileAsync(inputFileRef).then(value => {
             setQuestions(value);
+            setUploadButtonHidden(false);
         })
     }
 
@@ -121,16 +126,17 @@ const Subjects = () => {
     const fetchQuiz = (subjectIdNo) => {
         getTakeQuizzes({ subjectId: subjectIdNo, questionNumber: 1000 }).then(
             (value) => {
-                dispatch(setTakeQuizState(value))
+                setSubjectIDNo(subjectIdNo);
                 parseQuestion(value);
-            }).catch((err) => {
-                if (storedQuestions.length !== 0) {
-                    console.log('UseSelect', storedQuestions)
-                    filterStoredQuestions(storedQuestions, subjectIdNo)
-                }
+                setUploadButtonHidden(true);
             })
     }
 
+    /**
+     * It takes an array of objects, and returns an array of objects with the same keys, but with the
+     * values of the key 'Answer' parsed.
+     * @param value - the array of objects that I'm trying to parse
+     */
 
     const parseQuestion = (value) => {
         const questions = value.map((question) => {
@@ -175,17 +181,23 @@ const Subjects = () => {
         return answer;
     }
 
-    /**
-     * FilterStoredQuestions() takes in a value and a subjectIdNo, and returns a filtered array of
-     * questions based on the subjectIdNo.
-     * @param value - the array of objects that I'm filtering through
-     * @param subjectIdNo - The subject id number of the subject that was clicked on.
-     */
-    const filterStoredQuestions = (value, subjectIdNo) => {
-        const questions = value.filter((question) => {
-            return question.subject_id === subjectIdNo;
+
+    const onUploadQuestion = (event) => {
+        event.preventDefault();
+        console.log('Questions', questions)
+        uploadQuizzes({ subjectIdNo: subjectIDNO, questionArray: questions }).then((value) => {
+            location.reload();
+        }).catch((err) => {
+            console.log('Err', err);
         })
-        parseQuestion(questions);
+    }
+
+    const onDeleteAllQuestions = (event) => {
+        event.preventDefault();
+        deleteAllQuizzes({ subjectIdNo: subjectIDNO }).then((value) => {
+            dispatch(removeTakeQuizState());
+            location.reload();
+        })
     }
 
     return (
@@ -223,6 +235,8 @@ const Subjects = () => {
                                     </Col>
                                     :
                                     <Col xs={12}>
+                                        <Button onClick={(event) => { onDeleteAllQuestions(event) }}>Delete</Button>
+                                        {(!uploadButtonHidden) ? <Button color='primary' onClick={(event) => { onUploadQuestion(event) }}>Upload</Button> : ''}
                                         <Table hover responsive>
                                             <thead className="text-primary">
                                                 <tr>
