@@ -29,26 +29,10 @@ function Footer(props) {
           <ul>
             <li>
               <a
-                href="https://www.creative-tim.com?ref=nudr-footer"
+                href="https://www.pipelinepredators.com"
                 target="_blank"
               >
-                Creative Tim
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://presentation.creative-tim.com?ref=nudr-footer"
-                target="_blank"
-              >
-                About Us
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://blog.creative-tim.com?ref=nudr-footer"
-                target="_blank"
-              >
-                Blog
+                Pipeline Predators
               </a>
             </li>
           </ul>
@@ -60,15 +44,15 @@ function Footer(props) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Invision
+            Pipeline Predators Admin Portal
           </a>
-          . Coded by{" "}
+          . Coded by{" Pipeline predators team "}
           <a
-            href="https://www.creative-tim.com?ref=nudr-footer"
+            href="https://www.pipelinepredators.com"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Creative Tim
+            Pipeline Predators
           </a>
           .
         </div>
