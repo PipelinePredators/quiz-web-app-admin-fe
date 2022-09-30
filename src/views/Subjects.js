@@ -270,8 +270,6 @@ const Subjects = () => {
     const onUploadQuestion = (event) => {
         event.preventDefault();
         onUploadNotification();
-        console.log('Questions', questions)
-
     }
 
     const onDeleteAllQuestions = (event) => {
@@ -345,7 +343,6 @@ const Subjects = () => {
                                             <tbody>
                                                 {
                                                     questions.map((value, index) => {
-                                                        console.log('Value', value);
                                                         return (
                                                             <tr key={index}>
                                                                 <th scope="row">
