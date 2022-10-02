@@ -55,8 +55,50 @@ const Subjects = () => {
         const inputFile = document.getElementById('excelFile');
         const inputFileRef = inputFile?.files[0];
         handleFileAsync(inputFileRef).then(value => {
-            setQuestions(value);
-            setUploadButtonHidden(false);
+            let checkForColumnMatches = false;
+            let errorQuestion = null;
+            for (const question of value) {
+                if (question['Question'] !== undefined &&
+                    question['Option A'] !== undefined &&
+                    question['Option B'] !== undefined &&
+                    question['Option C'] !== undefined &&
+                    question['Option D'] !== undefined &&
+                    question['Answer'] !== undefined) {
+                    if (
+                        question['Question'] !== '' &&
+                        question['Option A'] !== '' &&
+                        question['Option B'] !== '' &&
+                        question['Option C'] !== '' &&
+                        question['Option D'] !== '' &&
+                        question['Answer'] !== ''
+                    ) {
+                        checkForColumnMatches = true;
+                    }
+                } else {
+                    errorQuestion = question;
+                    checkForColumnMatches = false;
+                    break;
+                }
+            }
+
+            if (checkForColumnMatches) {
+                const formattedQuestions = value.map((question) => {
+                    const formattedQuestion = {
+                        'Question': question['Question'].trim(),
+                        'Option A': question['Option A'].trim(),
+                        'Option B': question['Option B'].trim(),
+                        'Option C': question['Option C'].trim(),
+                        'Option D': question['Option D'].trim(),
+                        'Answer': question['Answer'].trim()
+                    }
+                    return formattedQuestion;
+                })
+                setQuestions(formattedQuestions);
+                setUploadButtonHidden(false);
+            } else {
+                notifyUserOfImproperFormat(errorQuestion);
+            }
+
         })
     }
 
@@ -91,6 +133,25 @@ const Subjects = () => {
         Toast.fire({
             icon: 'info',
             title: message
+        })
+    }
+
+    const notifyUserOfImproperFormat = (errorQuestion) => {
+        Swal.fire(
+            'Warning!',
+            `Improper Formatting of content. Please check your excel sheet.
+                ${errorQuestion['Question']},&#10;
+                ${errorQuestion['Option A']},&#10;
+                ${errorQuestion['Option B']},&#10;
+                ${errorQuestion['Option C']},&#10;
+                ${errorQuestion['Option D']},&#10;
+                ${errorQuestion['Answer']}&#10;
+            `,
+            'error'
+        ).then((result) => {
+            if (result.isConfirmed) {
+                location.reload();
+            }
         })
     }
 
@@ -131,7 +192,15 @@ const Subjects = () => {
             confirmButtonText: 'Yes!'
         }).then((result) => {
             if (result.isConfirmed) {
+                let errorMessage = {
+                    uploadError: {}
+                }
                 uploadQuizzes({ subjectIdNo: subjectIDNO, questionArray: questions }).then((value) => {
+                    console.log('Value', value?.error?.code)
+                    if (value?.error?.code !== undefined) {
+                        errorMessage.uploadError = value
+                        throw errorMessage;
+                    }
                     Swal.fire(
                         'Success!',
                         'Your file has been uploaded successfully.',
@@ -142,15 +211,28 @@ const Subjects = () => {
                         }
                     })
                 }).catch((err) => {
-                    Swal.fire(
-                        'Error!',
-                        'Upload failed.',
-                        'failed'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
-                    })
+                    console.log('Error', err)
+                    if (err?.uploadError !== null) {
+                        Swal.fire(
+                            'Warning!',
+                            `Uploaded With Errors '${err?.uploadError?.error?.sqlMessage}'`,
+                            'warning'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        })
+                    } else {
+                        Swal.fire(
+                            'Error!',
+                            'Upload failed.',
+                            'error'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        })
+                    }
                 })
             }
         })
@@ -234,7 +316,7 @@ const Subjects = () => {
                 'Option D': question.options[3],
                 'Answer': answer,
             }
-            return data
+            return data;
         })
         setQuestions(questions);
     }
@@ -248,16 +330,16 @@ const Subjects = () => {
     const parseAnswer = (question) => {
         let answer = '';
         switch (question.answer) {
-            case 0:
+            case 1:
                 answer = 'A';
                 break;
-            case 1:
+            case 2:
                 answer = 'B';
                 break;
-            case 2:
+            case 3:
                 answer = 'C';
                 break;
-            case 3:
+            case 4:
                 answer = 'D';
                 break;
             default:
@@ -336,7 +418,7 @@ const Subjects = () => {
                                                         Option D
                                                     </th>
                                                     <th>
-                                                        Answer No.
+                                                        Answer
                                                     </th>
                                                 </tr>
                                             </thead>
