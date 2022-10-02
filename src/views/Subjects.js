@@ -83,13 +83,14 @@ const Subjects = () => {
 
             if (checkForColumnMatches) {
                 const formattedQuestions = value.map((question) => {
+                    console.log('Question',question)
                     const formattedQuestion = {
-                        'Question': question['Question'].trim(),
-                        'Option A': question['Option A'].trim(),
-                        'Option B': question['Option B'].trim(),
-                        'Option C': question['Option C'].trim(),
-                        'Option D': question['Option D'].trim(),
-                        'Answer': question['Answer'].trim()
+                        'Question': question['Question'],
+                        'Option A': question['Option A'],
+                        'Option B': question['Option B'],
+                        'Option C': question['Option C'],
+                        'Option D': question['Option D'],
+                        'Answer': question['Answer'].trim(' ')
                     }
                     return formattedQuestion;
                 })
